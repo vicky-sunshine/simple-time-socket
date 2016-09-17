@@ -1,6 +1,6 @@
 /*
  * Simple Time Server For 2016 Introduction to Computer Network
- * Author: vicky-sunshine @ HSNL-TAs
+ * Author: vicky-sunshine
  * 2016/09
  */
 
@@ -28,8 +28,9 @@ int main() {
   struct sockaddr_in cli_addr;  // address of client, used by `accept()`
   socklen_t addr_len;           // size of address, used by `accept()`
 
-  time_t ticks;
-  char send_buff[MAX_SIZE];
+  time_t ticks;                 // store current time
+  int write_bytes;              // number of byte, return by `write()`
+  char buf[MAX_SIZE];           // buffer to store msg
 
 
   /* 1) Create the socket, use `socket()`
@@ -79,11 +80,15 @@ int main() {
 
   /* Handle message, write current time to client */
   ticks = time(NULL);
-  snprintf(send_buff, sizeof(send_buff), "%.24s\r\n", ctime(&ticks));
-  write(cli_fd, send_buff, strlen(send_buff));
+  snprintf(buf, sizeof(buf), "%.24s\r\n", ctime(&ticks));
+
+  write_bytes = write(cli_fd, buf, strlen(buf));
+  if(write_bytes < 0) {
+    perror("Write Failed");
+    exit(1);
+  }
 
   close(cli_fd);
   close(svr_fd);
-
   return 0;
 }
