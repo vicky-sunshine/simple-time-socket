@@ -1,6 +1,6 @@
 /*
  * Simple Time Server For 2016 Introduction to Computer Network
- * Author: vicky-sunshine
+ * Author: vicky-sunshine @ HSNL-TAs
  * 2016/09
  */
 
@@ -68,27 +68,30 @@ int main() {
 
   /* 4) Accept client connections */
   addr_len = sizeof(struct sockaddr_in);
-  cli_fd = accept(svr_fd, (struct sockaddr*)&cli_addr, (socklen_t*)&addr_len);
+  while(1) {
+    cli_fd = accept(svr_fd, (struct sockaddr*)&cli_addr, (socklen_t*)&addr_len);
 
-  if (cli_fd < 0) {
-    perror("Accept failed");
-    exit(1);
+    if (cli_fd < 0) {
+      perror("Accept failed");
+      exit(1);
+    }
+
+    printf("Connection accepted\n");
+    printf("Client is from %s:%d\n\n", inet_ntoa(cli_addr.sin_addr), ntohs(cli_addr.sin_port));
+
+    /* Handle message, write current time to client */
+    ticks = time(NULL);
+    snprintf(buf, sizeof(buf), "%.24s\r\n", ctime(&ticks));
+
+    write_bytes = write(cli_fd, buf, strlen(buf));
+    if(write_bytes < 0) {
+      perror("Write Failed");
+      exit(1);
+    }
+
+    close(cli_fd);
   }
 
-  printf("Connection accepted\n");
-  printf("Client is from %s:%d\n\n", inet_ntoa(cli_addr.sin_addr), ntohs(cli_addr.sin_port));
-
-  /* Handle message, write current time to client */
-  ticks = time(NULL);
-  snprintf(buf, sizeof(buf), "%.24s\r\n", ctime(&ticks));
-
-  write_bytes = write(cli_fd, buf, strlen(buf));
-  if(write_bytes < 0) {
-    perror("Write Failed");
-    exit(1);
-  }
-
-  close(cli_fd);
   close(svr_fd);
   return 0;
 }
