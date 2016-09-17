@@ -65,10 +65,10 @@ int main() {
   printf("Listening on %s:%d\n", inet_ntoa(svr_addr.sin_addr), PORT);
   printf("Waiting for client...\n\n");
 
-
-  /* 4) Accept client connections */
   addr_len = sizeof(struct sockaddr_in);
+  
   while(1) {
+    /* 4) Accept client connections */
     cli_fd = accept(svr_fd, (struct sockaddr*)&cli_addr, (socklen_t*)&addr_len);
 
     if (cli_fd < 0) {
