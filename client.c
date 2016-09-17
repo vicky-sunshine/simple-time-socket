@@ -33,19 +33,17 @@ int main (int argc , char **argv) {
     exit(1);
   }
 
-  /* 2) Bind the socket to port, with prepared sockaddr_in structure */
+  /* 2) Connect to server with prepared sockaddr_in structure */
   bzero(&svr_addr, sizeof(svr_addr));
   svr_addr.sin_family = AF_INET;
   svr_addr.sin_addr.s_addr = inet_addr("127.0.0.1");
   svr_addr.sin_port = htons(8888);
 
-  /* 3) Connect to a given port on the server address*/
   if (connect(cli_fd, (struct sockaddr *)&svr_addr, sizeof(svr_addr)) < 0) {
     perror("Connect failed");
     exit(1);
   }
-
-  printf("Connected\n");
+  printf("Server connected\n");
 
   /* Handle message, read current from the server */
   byte_num = read(cli_fd, buf, sizeof(buf));
@@ -54,9 +52,9 @@ int main (int argc , char **argv) {
     exit(1);
   }
   buf[byte_num] = '\0';
-
   printf("Get bytes length: %d\n", byte_num);
   printf("Server datetimes: %s\r\n", buf);
+
   close(cli_fd);
 
   return 0;

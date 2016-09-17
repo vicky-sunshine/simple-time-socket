@@ -61,8 +61,8 @@ int main() {
 
   printf("Server started\n");
   printf("Maximum connections set to %d\n", MAX_CONNECTION);
-  printf("Listening on: %s:%d\n", inet_ntoa(svr_addr.sin_addr), PORT);
-  printf("Waiting for client...\n");
+  printf("Listening on %s:%d\n", inet_ntoa(svr_addr.sin_addr), PORT);
+  printf("Waiting for client...\n\n");
 
 
   /* 4) Accept client connections */
@@ -75,7 +75,7 @@ int main() {
   }
 
   printf("Connection accepted\n");
-  printf("Client is from %s:%d\n", inet_ntoa(cli_addr.sin_addr), ntohs(cli_addr.sin_port));
+  printf("Client is from %s:%d\n\n", inet_ntoa(cli_addr.sin_addr), ntohs(cli_addr.sin_port));
 
   /* Handle message, write current time to client */
   ticks = time(NULL);
